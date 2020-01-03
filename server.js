@@ -31,21 +31,19 @@ app.get('/todos/:id', (req, res) => {
 });
 
 app.post('/todos', (req, res) => {
-    var body = req.body;
+    var body = _.pick(req.body, 'completed', 'description');
+
 
     // bad request
     if (!_.isBoolean(body.completed) || !_.isString(body.description) || body.description.trim().length === 0) {
         return res.status(400).send();
     }
 
-    // add id field
-    body.id = todoNextId;
-    todoNextId++;
+    body.description = body.description.trim();
 
-    //push body into array
+    body.id = todoNextId++;
+
     todos.push(body);
-
-    // console.log('description: ' + body.description);
 
     res.json(body);
 });
